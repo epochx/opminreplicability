@@ -5,16 +5,16 @@ DATAPATH=$1
 mkdir -p "$DATAPATH"/data/{pickle,corpora}
 mkdir -p "$DATAPATH"/data/lexicon/liu
 mkdir -p "$DATAPATH"/data/stopwords
-mkdir -p "$DATAPATH"/data/corpora/opinion/{semeval-absa-2014,youtube}
+mkdir -p "$DATAPATH"/data/corpora/opinion/{liu,semeval-absa-2014,youtube}
 
 # Liu Customer Review Dataset
 wget http://www.cs.uic.edu/~liub/FBS/CustomerReviewData.zip
 unzip ./CustomerReviewData.zip
-mv ./customer\ review\ data/Apex\ AD2600\ Progressive-scan\ DVD\ player.txt "$DATAPATH"/data/corpora/opinion/apex_dvd_player.txt
-mv ./customer\ review\ data/Nikon\ coolpix\ 4300.txt "$DATAPATH"/data/corpora/opinion/nikon_camera.txt
-mv ./customer\ review\ data/Canon\ G3.txt "$DATAPATH"/data/corpora/opinion/canon_camera.txt
-mv ./customer\ review\ data/Nokia\ 6610.txt "$DATAPATH"/data/corpora/opinion/nokia_cellphone.txt
-mv ./customer\ review\ data/Creative\ Labs\ Nomad\ Jukebox\ Zen\ Xtra\ 40GB.txt "$DATAPATH"/data/corpora/opinion/creative_mp3_player.txt
+mv ./customer\ review\ data/Apex\ AD2600\ Progressive-scan\ DVD\ player.txt "$DATAPATH"/data/corpora/opinion/liu/apex_dvd_player.txt
+mv ./customer\ review\ data/Nikon\ coolpix\ 4300.txt "$DATAPATH"/data/corpora/opinion/liu/nikon_camera.txt
+mv ./customer\ review\ data/Canon\ G3.txt "$DATAPATH"/data/corpora/opinion/liu/canon_camera.txt
+mv ./customer\ review\ data/Nokia\ 6610.txt "$DATAPATH"/data/corpora/opinion/liu/nokia_cellphone.txt
+mv ./customer\ review\ data/Creative\ Labs\ Nomad\ Jukebox\ Zen\ Xtra\ 40GB.txt "$DATAPATH"/data/corpora/opinion/liu/creative_mp3_player.txt
 
 # stanford stopwords
 wget https://raw.githubusercontent.com/stanfordnlp/CoreNLP/master/data/edu/stanford/nlp/patterns/surface/stopwords.txt

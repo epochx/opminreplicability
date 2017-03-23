@@ -8,7 +8,7 @@ Code for the paper "Replication issues in syntax-based aspect extraction for opi
 
 - Download data and create environment
     1. Make `create_data_folder.sh` executable: `chmod +x create_data_folder.sh`
-    2. Run `./create_data_folder.sh path/to/data/folder`
+    2. Run `./create_data_folder.sh path/to/data/folder` (No trailing slash!)
     3. Modify `./enlp/settings.py` accordingly
 
 - Pre-process datasets
