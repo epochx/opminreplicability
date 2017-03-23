@@ -28,3 +28,15 @@ wget http://www.cs.uic.edu/~liub/FBS/opinion-lexicon-English.rar
 unrar e ./opinion-lexicon-English.rar
 mv ./positive-words.txt "$DATAPATH"/data/lexicon/liu/positive_words.txt
 mv ./negative-words.txt "$DATAPATH"/data/lexicon/liu/negative_words.txt
+
+rm -r CustomerReviewData.zip opinion-lexicon-English.rar customer\ review\ data
+
+echo "Patching corpora"
+cd "$DATAPATH"/data/corpora/opinion/liu
+
+sed -i '155s/feature/feature[+2]/' nokia_cellphone.txt
+sed -i '480s/look{+1]/look[+1]/' nokia_cellphone.txt
+sed -i '79s/^feature\[+2\]\,\s/feature[+2]/' canon_camera.txt
+sed -i '157s/look##/look[+2]##/' creative_mp3_player.txt
+sed -i '334s/setup\[2\]/setup[+2]/' creative_mp3_player.txt
+sed -i '485s/#/##/' apex_dvd_player.txt

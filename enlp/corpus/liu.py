@@ -15,6 +15,13 @@ LIU_CORPORA_PATH = path.join(OPINION_PATH, 'liu')
 # --- LIU CORPUS CLASSES ------------------------------------------------------
 
 
+class LiuCorpusError(Exception):
+    def __init__(self, line, filepath):
+
+        msg = ('Inconsistency found on line {}, on file '
+               '{}'.format(line, filepath))
+        super(LiuCorpusError, self).__init__(msg)
+
 class LiuCorpus(Corpus):
     """
     Class to read Liu corpus. Sentences in the corpus are extracted as
@@ -33,10 +40,8 @@ class LiuCorpus(Corpus):
         the source file
         """
         # self.name = filepath.split('/')[-1].replace('.txt', '')
-        if self._check():
-            self._read()
-        else:
-            raise CorpusError("Corpus was not properly built. Check for consistency")
+        self._check()
+        self._read()
 
     def __repr__(self):
         return "<LiuCorpus {0}>".format(self.name)
@@ -58,30 +63,25 @@ class LiuCorpus(Corpus):
         mfile = open(self.filepath, "r")
         for i in mfile.readlines():
             linea = i.replace('\n', '')
-            if (self._is_liu_comment(linea) is False):
-                if (self._is_new_comment(linea) is False):
-                    partes = linea.split('##')
-                    if (len(partes) < 2):
-                        print counter
-                        return False
-                    tags = partes[0]
-                    real_sentence = partes[1].replace("\r", "").replace("\n", "").strip()
-                    if (real_sentence == ""):
-                        print counter
-                        return False
-                    if (tags != ""):
-                        aspects_list = tags.strip().split(",")
-                        for aspect_item in aspects_list:
-                            aspect = self._extract_aspect(aspect_item)
-                            if (aspect == ""):
-                                print counter
-                                return False
-                            orientation = self._extract_orientation(aspect_item)
-                            if (orientation is None):
-                                print counter
-                                return False
+            if (not self._is_liu_comment(linea)
+               and not self._is_new_comment(linea)):
+                partes = linea.split('##')
+                if (len(partes) < 2):
+                    raise LiuCorpusError(counter, self.filepath)
+                tags = partes[0]
+                real_sentence = partes[1].replace("\r", "").replace("\n", "").strip()
+                if (real_sentence == ""):
+                    raise LiuCorpusError(counter, self.filepath)
+                if (tags != ""):
+                    aspects_list = tags.strip().split(",")
+                    for aspect_item in aspects_list:
+                        aspect = self._extract_aspect(aspect_item)
+                        if (aspect == ""):
+                            raise LiuCorpusError(counter, self.filepath)
+                        orientation = self._extract_orientation(aspect_item)
+                        if (orientation is None):
+                            raise LiuCorpusError(counter, self.filepath)
             counter += 1
-        return True
 
     def _read(self):
         self._comment_counter = 0
@@ -91,7 +91,8 @@ class LiuCorpus(Corpus):
         self._sentences = OrderedDict()
 
         for line in open(self.filepath, "r").readlines():
-            self.parse_line(line)
+            if not self._is_liu_comment(line):
+                self.parse_line(line)
 
     def parse_line(self, string):
         if not self._is_new_comment(string):
@@ -107,7 +108,7 @@ class LiuCorpus(Corpus):
             sentence = Sentence(string=string, id=id, document=review)
             sentence.aspects = []
             self._sentences[id] = sentence
-            review.append(sentence) 
+            review.append(sentence)
             if aspects_string:
                 for aspect_string in aspects_string.strip().split(", "):
                     term = self._extract_aspect(aspect_string)
@@ -123,7 +124,7 @@ class LiuCorpus(Corpus):
             self._comment_counter += 1
 
     def _is_liu_comment(self, string):
-        if (string == ("\n") or string == ("\r")):
+        if (string == ("\n") or string == ("\r") or string == ("\r\n")):
             return True
         else:
             pos = re.search("\A\*+", string)
