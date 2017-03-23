@@ -4,7 +4,7 @@ DATAPATH=$1
 
 mkdir -p "$DATAPATH"/data/{pickle,corpora}
 mkdir -p "$DATAPATH"/data/lexicon/liu
-mkdir -p "$DATAPATH"/data/stopwords
+mkdir -p "$DATAPATH"/data/corpora/stopwords
 mkdir -p "$DATAPATH"/data/corpora/opinion/{liu,semeval-absa-2014,youtube}
 
 # Liu Customer Review Dataset
@@ -21,7 +21,8 @@ wget https://raw.githubusercontent.com/stanfordnlp/CoreNLP/master/data/edu/stanf
 mv ./stopwords.txt "$DATAPATH"/data/stopwords/stanford_stopwords.txt
 
 # nltk stopwords
-# cp ~/nltk_data/stopwords.txt "$DATAPATH"/data/stopwords/nltk_stopwords.txt
+wget https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/packages/corpora/stopwords.zip
+unzip -p stopwords.zip stopwords/english >./data/corpora/stopwords/nltk_stopwords.txt
 
 # opinion words
 wget http://www.cs.uic.edu/~liub/FBS/opinion-lexicon-English.rar
@@ -30,6 +31,7 @@ mv ./positive-words.txt "$DATAPATH"/data/lexicon/liu/positive_words.txt
 mv ./negative-words.txt "$DATAPATH"/data/lexicon/liu/negative_words.txt
 
 rm -r CustomerReviewData.zip opinion-lexicon-English.rar customer\ review\ data
+rm stopwords.zip
 
 echo "Patching corpora"
 cd "$DATAPATH"/data/corpora/opinion/liu
